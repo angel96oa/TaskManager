@@ -1,8 +1,0 @@
-﻿syntax = "proto3";
-option csharp_namespace = "TaskManager.gRPC";
-package TaskManager;
-import "Common.proto";
-
-service TaskManagerRPCService{
-	rpc CreateTask(CommonProto.JsonMessage) returns (CommonProto.JsonMessage);
-}

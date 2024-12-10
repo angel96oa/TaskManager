@@ -1,0 +1,23 @@
+﻿syntax = "proto3";
+option csharp_namespace = "TaskManager.gRPC.Proto";
+package TaskManagerGrpService;
+
+service TaskManagerGRPCService{
+	rpc CreateTask(TaskCreateMessage) returns (TaskCreatedMessage);
+}
+
+message TaskCreatedMessage{
+	int32 id = 1;
+}
+
+message TaskCreateMessage{
+	string name = 1;
+	string description = 2;
+	Status status = 3;
+}
+
+enum Status{
+	OPEN = 0;
+	IN_PROGRESS = 1;
+	CLOSED = 2;
+}

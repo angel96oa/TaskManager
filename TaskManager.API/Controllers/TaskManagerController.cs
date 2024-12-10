@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using TaskManager.API.Models;
 using TaskManager.API.Service;
+using TaskManager.Data.Models;
+
 namespace TaskManager.API.Controllers
 {
     [ApiController]
@@ -8,20 +9,20 @@ namespace TaskManager.API.Controllers
     public class TaskManagerController : ControllerBase
     {
         private readonly ILogger<TaskManagerController> _logger;
-        private readonly TaskManagerService _taskManagerService;
-        public TaskManagerController(ILogger<TaskManagerController> logger, TaskManagerService taskManagerService)
+        private readonly TaskManagerClient _taskManagerClient;
+        public TaskManagerController(ILogger<TaskManagerController> logger, TaskManagerClient taskManagerClient)
         {
             _logger = logger;
-            _taskManagerService = taskManagerService;
+            _taskManagerClient = taskManagerClient;
         }
 
         [HttpPost("CreateTask")]
-        public async Task<Guid> CreateTask(string name, string description)
+        public async Task<int> CreateTask([FromBody] TaskElement element)
         {
-            ValidateParameters(name, description);
+            ValidateParameters(element.Name, element.Description);
 
             _logger.LogInformation("CreateTask operation received");
-            Guid id = await _taskManagerService.CreateTask(name, description);
+            int id = await _taskManagerClient.CreateTask(element.Name, element.Description);
 
             return id;
         }
@@ -31,7 +32,8 @@ namespace TaskManager.API.Controllers
             if (name == null)
             {
                 throw new ArgumentNullException(nameof(name));
-            };
+            }
+
             if (description == null)
             {
                 throw new ArgumentNullException(nameof(description));
