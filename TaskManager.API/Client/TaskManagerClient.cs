@@ -1,9 +1,7 @@
-using Grpc.Net.Client;
 using TaskManager.gRPC.Proto;
-using System;
-using System.Threading.Tasks;
+using Grpc.Core;
 
-namespace TaskManager.API.Service
+namespace TaskManager.API
 {
     public class TaskManagerClient
     {
@@ -18,9 +16,24 @@ namespace TaskManager.API.Service
 
         public Task<int> CreateTask(string name, string description){
             // Create a task
-            _logger.LogInformation("Task created");
-            TaskCreatedMessage result = _client.CreateTask(new TaskCreateMessage { Name = name, Description = description, Status = Status.Open });
-            return Task.FromResult(result.Id);
+            try
+            {
+                _logger.LogInformation("Task creation started with name: {Name}", name);
+
+                TaskCreatedMessage result = _client.CreateTask(new TaskCreateMessage { Name = name, Description = description, Status = gRPC.Proto.Status.Open });
+                return Task.FromResult(result.Id);
+            }
+            catch (RpcException rpcEx)
+            {
+                _logger.LogError(rpcEx, "gRPC error: {StatusCode} - {Message} - Name: {Name}, Description: {Description}", rpcEx.StatusCode, rpcEx.Message, name, description);
+                return Task.FromResult(0);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error: {Message} - Name: {Name}, Description: {Description}", ex.Message, name, description);
+                return Task.FromResult(0);
+            }
+
         }
     }
 }

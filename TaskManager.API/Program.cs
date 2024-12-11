@@ -1,5 +1,6 @@
 using TaskManager.gRPC.Proto;
-using TaskManager.API.Service;
+using TaskManager.API;
+using Grpc.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpcClient<TaskManagerGRPCService.TaskManagerGRPCServiceClient>(o =>
 {
     o.Address = new Uri(builder.Configuration["GrpcClient:Url"]!);
+    o.ChannelOptionsActions.Add(channelOptions =>
+    {
+        channelOptions.Credentials = ChannelCredentials.SecureSsl;
+    });
 });
 
 builder.Services.AddScoped<TaskManagerClient>();

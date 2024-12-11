@@ -1,4 +1,4 @@
-namespace TaskManager.Data.Models
+namespace TaskManager.Data
 {
     public class TaskElement
     {
@@ -7,13 +7,6 @@ namespace TaskManager.Data.Models
         public string Description { get; set; } = string.Empty;
         public DateTime TaskCreateDate { get; set; } = DateTime.Now;
         public DateTime finishTaskDate { get; set; }
-        public Status status { get; set; } = Status.OPEN;
-    }
-
-    public enum Status
-    {
-        OPEN,
-        IN_PROGRESS,
-        CLOSED
+        public string status { get; set; } = string.Empty;
     }
 }

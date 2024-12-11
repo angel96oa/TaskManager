@@ -1,29 +1,38 @@
 ﻿using Grpc.Core;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 using TaskManager.gRPC.Proto;
+using TaskManager.Data;
+using TaskManager.Messaging;
 
 namespace TaskManager.Service
 {
     public class TaskManagerService : TaskManagerGRPCService.TaskManagerGRPCServiceBase
     {
         private readonly ILogger<TaskManagerService> _logger;
+        private readonly ITaskRepository _taskRepository;
+        private readonly RabbitMQService _rabbitMQService;
 
-        public TaskManagerService(ILogger<TaskManagerService> logger)
+        public TaskManagerService(ILogger<TaskManagerService> logger, ITaskRepository taskRepository, RabbitMQService rabbitMQService)
         {
             _logger = logger;
+            _taskRepository = taskRepository;
+            _rabbitMQService = rabbitMQService;
         }
 
-        public override Task<TaskCreatedMessage> CreateTask(TaskCreateMessage request, ServerCallContext context)
+        public async override Task<TaskCreatedMessage> CreateTask(TaskCreateMessage request, ServerCallContext context)
         {
             _logger.LogInformation("Creating task with name {Name}", request.Name);
-            TaskCreatedMessage taskCreatedMessage = new TaskCreatedMessage
+            TaskElement element = new TaskElement
             {
-                Id = 1
+                Name = request.Name,
+                Description = request.Description,
+                status = request.Status.ToString()
             };
-            _logger.LogInformation("Task created with id {Id}", taskCreatedMessage.Id);
-            return Task.FromResult(taskCreatedMessage);
+
+            int id = await _taskRepository.CreateTaskAsync(element);
+
+            _rabbitMQService.SendMessage("Created new registry on database");
+
+            return new TaskCreatedMessage { Id = id };
         }
     }
 }
