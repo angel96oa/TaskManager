@@ -1,4 +1,4 @@
-using TaskManager.gRPC.Proto;
+using TaskManager.Proto;
 using Grpc.Core;
 
 namespace TaskManager.API
@@ -20,7 +20,7 @@ namespace TaskManager.API
             {
                 _logger.LogInformation("Task creation started with name: {Name}", name);
 
-                TaskCreatedMessage result = _client.CreateTask(new TaskCreateMessage { Name = name, Description = description, Status = gRPC.Proto.Status.Open });
+                TaskCreatedMessage result = _client.CreateTask(new TaskCreateMessage { Name = name, Description = description, Status = Proto.Status.Open });
                 return Task.FromResult(result.Id);
             }
             catch (RpcException rpcEx)

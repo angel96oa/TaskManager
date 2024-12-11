@@ -9,6 +9,7 @@
         public string ExchangeName { get; set; }
 
         // Constructor
+        public RabbitMQConfiguration() { }
         public RabbitMQConfiguration(string hostName, string userName, string password, string queueName, string exchangeName)
         {
             HostName = hostName;

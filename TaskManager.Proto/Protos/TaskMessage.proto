@@ -1,5 +1,5 @@
 ﻿syntax = "proto3";
-option csharp_namespace = "TaskManager.gRPC.Proto";
+option csharp_namespace = "TaskManager.Proto";
 package TaskManagerGrpService;
 
 service TaskManagerGRPCService{

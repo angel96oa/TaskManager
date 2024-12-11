@@ -1,7 +1,9 @@
 ﻿using Grpc.Core;
-using TaskManager.gRPC.Proto;
+using TaskManager.Proto;
 using TaskManager.Data;
 using TaskManager.Messaging;
+using RabbitMQ.Client.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskManager.Service
 {
@@ -21,6 +23,7 @@ namespace TaskManager.Service
         public async override Task<TaskCreatedMessage> CreateTask(TaskCreateMessage request, ServerCallContext context)
         {
             _logger.LogInformation("Creating task with name {Name}", request.Name);
+            int id = 0;
             TaskElement element = new TaskElement
             {
                 Name = request.Name,
@@ -28,10 +31,21 @@ namespace TaskManager.Service
                 status = request.Status.ToString()
             };
 
-            int id = await _taskRepository.CreateTaskAsync(element);
+            try
+            {
+                id = await _taskRepository.CreateTaskAsync(element);
+                _rabbitMQService.SendMessage("Created new registry on database");
+            }
+            catch (RabbitMQClientException ex)
+            {
+                _logger.LogError(ex, "Error sending message");
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Error updating database");
+            }
 
-            _rabbitMQService.SendMessage("Created new registry on database");
-
+            _logger.LogInformation("Created task with id {Id}", id);
             return new TaskCreatedMessage { Id = id };
         }
     }

@@ -5,9 +5,12 @@ using TaskManager.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddLogging();
+
+builder.Services.Configure<RabbitMQConfiguration>(
+    builder.Configuration.GetSection("RabbitMQ"));
+
 builder.Services.AddSingleton<RabbitMQService>();
 
 builder.Services.AddDbContext<TaskManagerDbContext>(options =>
@@ -32,7 +35,6 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

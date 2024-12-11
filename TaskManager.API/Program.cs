@@ -1,4 +1,4 @@
-using TaskManager.gRPC.Proto;
+using TaskManager.Proto;
 using TaskManager.API;
 using Grpc.Core;
 
