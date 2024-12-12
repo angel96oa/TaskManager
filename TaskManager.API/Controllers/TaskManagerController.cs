@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Data;
 
@@ -5,6 +6,7 @@ namespace TaskManager.API
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TaskManagerController : ControllerBase
     {
         private readonly ILogger<TaskManagerController> _logger;

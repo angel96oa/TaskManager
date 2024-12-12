@@ -2,8 +2,15 @@ using TaskManager.Service;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Data;
 using TaskManager.Messaging;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+// Leer la configuración para un proyecto específico
+var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+var kestrelConfig = builder.Configuration.GetSection($"Kestrel:{assemblyName}");
 
 builder.Services.AddGrpc();
 builder.Services.AddLogging();
@@ -24,6 +31,7 @@ builder.WebHost.ConfigureKestrel(options =>
     {
         listenOptions.UseHttps();
         listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+
     });
 });
 

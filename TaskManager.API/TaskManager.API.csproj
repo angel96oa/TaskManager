@@ -20,7 +20,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskManager.Data\TaskManager.Data.csproj" />
+    <ProjectReference Include="..\TaskManager.Identity\TaskManager.Identity.csproj" />
     <ProjectReference Include="..\TaskManager.Proto\TaskManager.Proto.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\TaskManager.Configuration\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
 </Project>

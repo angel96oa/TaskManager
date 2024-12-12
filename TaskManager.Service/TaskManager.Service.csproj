@@ -28,4 +28,10 @@
     <ProjectReference Include="..\TaskManager.Proto\TaskManager.Proto.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\TaskManager.Configuration\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>
