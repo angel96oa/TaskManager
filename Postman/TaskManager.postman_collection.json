@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "0a5e5120-cf6a-495d-bc34-5dc82e894873",
+		"_postman_id": "3a43174b-9f54-46b8-a919-bbe9142a5605",
 		"name": "TaskManager",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "22499575"
+		"_exporter_id": "36858781"
 	},
 	"item": [
 		{
@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Name\": \"New Task\",\r\n    \"Description\": \"Description from task\"\r\n}",
+					"raw": "{\r\n    \"Name\": \"Study\",\r\n    \"Description\": \"Start Study\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,14 +21,44 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/TaskManager/CreateTask",
+					"raw": "{{Http_Url}}/api/TaskManager/CreateTask",
 					"host": [
-						"{{url}}"
+						"{{Http_Url}}"
 					],
 					"path": [
 						"api",
 						"TaskManager",
 						"CreateTask"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"User\": \"angel\",\r\n    \"Password\": \"pass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5262/api/Auth/CreateUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5262",
+					"path": [
+						"api",
+						"Auth",
+						"CreateUser"
 					]
 				}
 			},
@@ -42,6 +72,51 @@
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
+					"let tokenUrl = 'http://localhost:5262/api/Auth/Login';\r",
+					"let user = pm.collectionVariables.get(\"user\");\r",
+					"let pass = pm.collectionVariables.get(\"pass\");\r",
+					"\r",
+					"// Define el cuerpo de la solicitud como un objeto JSON\r",
+					"const requestBody = {\r",
+					"    User: user,\r",
+					"    Password: pass\r",
+					"};\r",
+					"\r",
+					"// Configura la solicitud de la API para obtener el token\r",
+					"const getTokenRequest = {\r",
+					"  method: 'POST',\r",
+					"  url: tokenUrl,\r",
+					"  headers: {\r",
+					"      'Accept': 'application/json', // Asegúrate de que el servidor acepte JSON\r",
+					"      'Content-Type': 'application/json' // Asegúrate de que se envíe como JSON\r",
+					"  },\r",
+					"  body: {\r",
+					"    mode: 'raw', // Enviar el cuerpo como raw JSON\r",
+					"    raw: JSON.stringify(requestBody) // Convertir el objeto a cadena JSON\r",
+					"  }\r",
+					"};\r",
+					"\r",
+					"// Realiza la solicitud\r",
+					"pm.sendRequest(getTokenRequest, (err, response) => {\r",
+					"    if (err) {\r",
+					"        console.log('Error en la solicitud:', err);\r",
+					"    } else {\r",
+					"        if (response.status === 200) {\r",
+					"            // Asegúrate de que la respuesta sea válida\r",
+					"            try {\r",
+					"                const jsonResponse = response.json();\r",
+					"                const newAccessToken = jsonResponse.Token;\r",
+					"                pm.collectionVariables.set(\"authToken\", newAccessToken);\r",
+					"                console.log('Nuevo token:', newAccessToken);\r",
+					"            } catch (error) {\r",
+					"                console.log('Error al procesar la respuesta JSON:', error);\r",
+					"            }\r",
+					"        } else {\r",
+					"            console.log('Error en la respuesta: ' + response.status);\r",
+					"            console.log('Respuesta:', response.text()); // Para ver el cuerpo de la respuesta si no es JSON\r",
+					"        }\r",
+					"    }\r",
+					"});\r",
 					""
 				]
 			}
@@ -59,8 +134,23 @@
 	],
 	"variable": [
 		{
-			"key": "url",
+			"key": "Http_Url",
 			"value": "http://localhost:5262",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user",
+			"value": "juanperez",
+			"type": "string"
+		},
+		{
+			"key": "pass",
+			"value": "hashedpassword123",
 			"type": "string"
 		}
 	]
