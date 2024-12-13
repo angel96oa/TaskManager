@@ -1,27 +1,20 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 namespace TaskManager.Identity
 {
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ITokenService _tokenService;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration,
-            ITokenService tokenService)
+            IConfiguration configuration)
         {
             _userManager = userManager;
-            _tokenService = tokenService;
         }
 
-        public async Task<string> AuthenticateAsync(string username, string password)
+        public async Task<bool> AuthenticateAsync(string username, string password)
         {
             var user = await _userManager.FindByNameAsync(username);
 
@@ -29,25 +22,19 @@ namespace TaskManager.Identity
             {
                 throw new UnauthorizedAccessException("Invalid credentials");
             }
-
-            var token = await _tokenService.GenerateJwtTokenAsync(user);
-
-            return token;
+            return true;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(string username, string password)
         {
-            // Crea una instancia de un nuevo usuario
             var user = new ApplicationUser
             {
                 UserName = username,
                 PasswordHash = password
             };
 
-            // Crea el usuario en la base de datos y aplica el hash a la contraseña
             var result = await _userManager.CreateAsync(user, password);
 
-            // Devuelve el resultado de la creación del usuario
             return result;
         }
     }

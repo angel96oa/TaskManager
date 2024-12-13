@@ -18,28 +18,12 @@ namespace TaskManager.API
             _authenticationService = authService;
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto login)
-        {
-            try
-            {
-                var token = await _authenticationService.AuthenticateAsync(login.User, login.Password);
-                _logger.LogInformation("Login OK for user: {User}", login.User);
-                return Ok(new { Token = token });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                _logger.LogError(ex, "Error on login for user: {User}", login.User);
-                return Unauthorized("Invalid username or password.");
-            }
-        }
-
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] LoginDto login)
         {
             try
             {
-                var IdentityResult = await _authenticationService.RegisterUserAsync(login.User, login.Password);
+                await _authenticationService.RegisterUserAsync(login.User, login.Password);
                 _logger.LogInformation("Created user: {User}", login.User);
                 return Ok();
             }
