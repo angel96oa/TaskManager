@@ -1,70 +1,122 @@
 {
 	"info": {
-		"_postman_id": "3a43174b-9f54-46b8-a919-bbe9142a5605",
+		"_postman_id": "9a471a1b-4db7-4a70-b02e-4ee51e09eb4b",
 		"name": "TaskManager",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "36858781"
+		"_exporter_id": "22499575"
 	},
 	"item": [
 		{
-			"name": "CreateTask",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Name\": \"Study\",\r\n    \"Description\": \"Start Study\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "AuthController",
+			"item": [
+				{
+					"name": "CreateUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"User\": \"angel2\",\r\n    \"Password\": \"Pass123@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Http_Url}}/api/Auth/CreateUser",
+							"host": [
+								"{{Http_Url}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"CreateUser"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{Http_Url}}/api/TaskManager/CreateTask",
-					"host": [
-						"{{Http_Url}}"
-					],
-					"path": [
-						"api",
-						"TaskManager",
-						"CreateTask"
-					]
+				{
+					"name": "AdminRights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Http_Url}}/api/Auth/AdminRights?username=angel&role=ADMIN",
+							"host": [
+								"{{Http_Url}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"AdminRights"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "angel"
+								},
+								{
+									"key": "role",
+									"value": "ADMIN"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "New Request",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"User\": \"angel\",\r\n    \"Password\": \"pass\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "TaskManager",
+			"item": [
+				{
+					"name": "CreateTask",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Study\",\r\n    \"Description\": \"Start Study\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Http_Url}}/api/TaskManager/CreateTask",
+							"host": [
+								"{{Http_Url}}"
+							],
+							"path": [
+								"api",
+								"TaskManager",
+								"CreateTask"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5262/api/Auth/CreateUser",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5262",
-					"path": [
-						"api",
-						"Auth",
-						"CreateUser"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{pass}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{user}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -139,18 +191,13 @@
 			"type": "string"
 		},
 		{
-			"key": "authToken",
-			"value": "",
-			"type": "string"
-		},
-		{
 			"key": "user",
-			"value": "juanperez",
+			"value": "angel",
 			"type": "string"
 		},
 		{
 			"key": "pass",
-			"value": "hashedpassword123",
+			"value": "Pass123@",
 			"type": "string"
 		}
 	]
