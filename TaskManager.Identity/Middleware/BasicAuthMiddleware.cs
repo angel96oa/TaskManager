@@ -45,10 +45,20 @@ namespace TaskManager.Identity
                 {
                     var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
 
-                    // Llama al servicio para verificar las credenciales
                     await authService.AuthenticateAsync(username, password);
-                    _logger.LogInformation("Login OK for user: {User}", username);
+
+                    var roles = await authService.GetRolesForUserAsync(username);
+                    _logger.LogInformation("User authenticated: {User}", username);
+
+                    var requiredRoles = context.GetEndpoint()?.Metadata.GetMetadata<ApplicationRole>()?.Name;
+                    if (requiredRoles != null && !roles.Any(role => requiredRoles.Contains(role)))
+                    {
+                        throw new UnauthorizedAccessException("User does not have the required role.");
+                    }
+
+                    _logger.LogInformation("User authorized with roles: {Roles}", string.Join(", ", roles));
                 }
+            
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -67,7 +77,5 @@ namespace TaskManager.Identity
 
             await _next(context);
         }
-
-
     }
 }

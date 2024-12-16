@@ -32,12 +32,18 @@ builder.Services.AddGrpcClient<TaskManagerGRPCService.TaskManagerGRPCServiceClie
     });
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+        policy.RequireRole("Admin"));
+});
+
 var app = builder.Build();
 
 app.UseRouting();
 
 app.UseMiddleware<BasicAuthMiddleware>();
-
+app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();

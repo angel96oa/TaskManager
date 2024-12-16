@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TaskManager.Data;
 using TaskManager.Identity;
 
 namespace TaskManager.API
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;

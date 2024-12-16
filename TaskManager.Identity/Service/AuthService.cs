@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+
 namespace TaskManager.Identity
 {
     public class AuthService : IAuthService

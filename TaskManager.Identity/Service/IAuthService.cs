@@ -6,5 +6,6 @@ namespace TaskManager.Identity
     {
         Task<bool> AuthenticateAsync(string username, string password);
         Task<IdentityResult> RegisterUserAsync(string username, string password);
+        Task<IList<string>> GetRolesForUserAsync(string username);
     }
 }
