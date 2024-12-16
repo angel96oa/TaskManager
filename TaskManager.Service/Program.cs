@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TaskManager.Data;
 using TaskManager.Messaging;
 using System.Reflection;
+using TaskManager.Identity;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -10,6 +12,8 @@ builder.Configuration.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
 
 builder.Services.AddGrpc();
 builder.Services.AddLogging();
+
+
 
 builder.Services.Configure<RabbitMQConfiguration>(
     builder.Configuration.GetSection("RabbitMQ"));
@@ -19,6 +23,11 @@ builder.Services.AddSingleton<RabbitMQService>();
 builder.Services.AddDbContext<TaskManagerDbContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:TaskManagerDatabase"]));
 
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<TaskManagerDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 builder.WebHost.ConfigureKestrel(options =>
@@ -37,6 +46,9 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<TaskManagerDbContext>();
     dbContext.Database.Migrate();
+
+    var roles = scope.ServiceProvider.GetRequiredService<IUserRoleService>();
+    await roles.InitializeRoles();
 }
 
 if (app.Environment.IsDevelopment())

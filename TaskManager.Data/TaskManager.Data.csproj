@@ -20,4 +20,8 @@
     <ProjectReference Include="..\TaskManager.Identity\TaskManager.Identity.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

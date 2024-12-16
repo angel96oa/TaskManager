@@ -11,11 +11,13 @@ namespace TaskManager.API
     {
         private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authenticationService;
+        private readonly IUserRoleService _userRoleService;
 
-        public AuthController(ILogger<AuthController> logger, IAuthService authService)
+        public AuthController(ILogger<AuthController> logger, IAuthService authService, IUserRoleService userRoleService)
         {
             _logger = logger;
             _authenticationService = authService;
+            _userRoleService = userRoleService;
         }
 
         [HttpPost("CreateUser")]
@@ -30,6 +32,21 @@ namespace TaskManager.API
             catch (UnauthorizedAccessException ex)
             {
                 _logger.LogError(ex, "Error on creating for user: {User}", login.User);
+                return Unauthorized("Invalid username or password.");
+            }
+        }
+
+        [HttpGet("AdminRights")]
+        public async Task<IActionResult> AsignAdminRole(string username, string role)
+        {
+            try
+            {
+                await _userRoleService.AssignRoleToUserAsync(username, role);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Error on creating for user: {User}", username);
                 return Unauthorized("Invalid username or password.");
             }
         }
