@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskManager.Identity\TaskManager.Identity.csproj" />
+    <ProjectReference Include="..\TaskManager.Proto\TaskManager.Proto.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -19,7 +19,7 @@ namespace TaskManager.API
             {
                 _logger.LogInformation("Task creation started with name: {Name}", name);
 
-                TaskCreatedMessage result = _client.CreateTask(new TaskCreateMessage { Name = name, Description = description, Status = Proto.Status.Open });
+                TaskIdMessage result = _client.CreateTask(new TaskMessage { Name = name, Description = description, Status = Proto.Status.Open });
                 return Task.FromResult(result.Id);
             }
             catch (RpcException rpcEx)
@@ -32,7 +32,66 @@ namespace TaskManager.API
                 _logger.LogError(ex, "Unexpected error: {Message} - Name: {Name}, Description: {Description}", ex.Message, name, description);
                 return Task.FromResult(0);
             }
+        }
 
+        public Task<TaskMessage> ReadTask(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Reading task with Id: {Id}", id);
+                TaskMessage result = _client.ReadTask(new TaskIdMessage { Id = id });
+                return Task.FromResult(result);
+            }
+            catch (RpcException rpcEx)
+            {
+                _logger.LogError(rpcEx, "gRPC error: {StatusCode} - {Message} - Id: {Id}", rpcEx.StatusCode, rpcEx.Message, id);
+                return Task.FromResult(new TaskMessage());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error: {Message}", ex.Message);
+                return Task.FromResult(new TaskMessage());
+            }
+        }
+
+        public Task UpdateTask(int id, string name, string description, Proto.Status status)
+        {
+            try
+            {
+                _logger.LogInformation("Delete task with id: {Id}", id);
+                TaskResponseEmpty result = _client.UpdateTask(new TaskMessageId { Name = name, Description = description, Status = status, Id = id });
+                return Task.FromResult(result);
+            }
+            catch (RpcException rpcEx)
+            {
+                _logger.LogError(rpcEx, "gRPC error: {StatusCode} - {Message} - Id: {Id}", rpcEx.StatusCode, rpcEx.Message, id);
+                return Task.FromResult(0);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error: {Message}", ex.Message);
+                return Task.FromResult(0);
+            }
+        }
+
+        public Task DeleteTask(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Delete task with id: {Id}", id);
+                TaskResponseEmpty result = _client.DeleteTask(new TaskIdMessage { Id = id });
+                return Task.FromResult(result);
+            }
+            catch (RpcException rpcEx)
+            {
+                _logger.LogError(rpcEx, "gRPC error: {StatusCode} - {Message} - Id: {Id}", rpcEx.StatusCode, rpcEx.Message, id);
+                return Task.FromResult(0);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error: {Message}", ex.Message);
+                return Task.FromResult(0);
+            }
         }
     }
 }

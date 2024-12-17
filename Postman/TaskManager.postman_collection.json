@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "9a471a1b-4db7-4a70-b02e-4ee51e09eb4b",
+		"_postman_id": "006faf53-091e-44f9-899e-ae3396eb5da4",
 		"name": "TaskManager",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "22499575"
+		"_exporter_id": "36858781"
 	},
 	"item": [
 		{
@@ -98,6 +98,102 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "ReadTask",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Http_Url}}/api/TaskManager/ReadTask?id=1",
+							"host": [
+								"{{Http_Url}}"
+							],
+							"path": [
+								"api",
+								"TaskManager",
+								"ReadTask"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTask",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Study\",\r\n    \"Description\": \"Start Study\",\r\n    \"Status\": \"IN_PROGRESS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Http_Url}}/api/TaskManager/UpdateTask?id=1",
+							"host": [
+								"{{Http_Url}}"
+							],
+							"path": [
+								"api",
+								"TaskManager",
+								"UpdateTask"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTask",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Http_Url}}/api/TaskManager/DeleteTask?id=1",
+							"host": [
+								"{{Http_Url}}"
+							],
+							"path": [
+								"api",
+								"TaskManager",
+								"DeleteTask"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -124,51 +220,6 @@
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
-					"let tokenUrl = 'http://localhost:5262/api/Auth/Login';\r",
-					"let user = pm.collectionVariables.get(\"user\");\r",
-					"let pass = pm.collectionVariables.get(\"pass\");\r",
-					"\r",
-					"// Define el cuerpo de la solicitud como un objeto JSON\r",
-					"const requestBody = {\r",
-					"    User: user,\r",
-					"    Password: pass\r",
-					"};\r",
-					"\r",
-					"// Configura la solicitud de la API para obtener el token\r",
-					"const getTokenRequest = {\r",
-					"  method: 'POST',\r",
-					"  url: tokenUrl,\r",
-					"  headers: {\r",
-					"      'Accept': 'application/json', // Asegúrate de que el servidor acepte JSON\r",
-					"      'Content-Type': 'application/json' // Asegúrate de que se envíe como JSON\r",
-					"  },\r",
-					"  body: {\r",
-					"    mode: 'raw', // Enviar el cuerpo como raw JSON\r",
-					"    raw: JSON.stringify(requestBody) // Convertir el objeto a cadena JSON\r",
-					"  }\r",
-					"};\r",
-					"\r",
-					"// Realiza la solicitud\r",
-					"pm.sendRequest(getTokenRequest, (err, response) => {\r",
-					"    if (err) {\r",
-					"        console.log('Error en la solicitud:', err);\r",
-					"    } else {\r",
-					"        if (response.status === 200) {\r",
-					"            // Asegúrate de que la respuesta sea válida\r",
-					"            try {\r",
-					"                const jsonResponse = response.json();\r",
-					"                const newAccessToken = jsonResponse.Token;\r",
-					"                pm.collectionVariables.set(\"authToken\", newAccessToken);\r",
-					"                console.log('Nuevo token:', newAccessToken);\r",
-					"            } catch (error) {\r",
-					"                console.log('Error al procesar la respuesta JSON:', error);\r",
-					"            }\r",
-					"        } else {\r",
-					"            console.log('Error en la respuesta: ' + response.status);\r",
-					"            console.log('Respuesta:', response.text()); // Para ver el cuerpo de la respuesta si no es JSON\r",
-					"        }\r",
-					"    }\r",
-					"});\r",
 					""
 				]
 			}

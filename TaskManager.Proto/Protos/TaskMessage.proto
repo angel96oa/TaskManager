@@ -3,17 +3,27 @@ option csharp_namespace = "TaskManager.Proto";
 package TaskManagerGrpService;
 
 service TaskManagerGRPCService{
-	rpc CreateTask(TaskCreateMessage) returns (TaskCreatedMessage);
+	rpc CreateTask(TaskMessage) returns (TaskIdMessage);
+	rpc ReadTask(TaskIdMessage) returns (TaskMessage);
+	rpc UpdateTask(TaskMessageId) returns (TaskResponseEmpty);
+	rpc DeleteTask(TaskIdMessage) returns (TaskResponseEmpty);
 }
+message TaskResponseEmpty {}
 
-message TaskCreatedMessage{
-	int32 id = 1;
-}
-
-message TaskCreateMessage{
+message TaskMessage{
 	string name = 1;
 	string description = 2;
 	Status status = 3;
+}
+message TaskMessageId{
+	string name = 1;
+	string description = 2;
+	Status status = 3;
+	int32 id = 4;
+}
+
+message TaskIdMessage{
+	int32 id = 1;
 }
 
 enum Status{
