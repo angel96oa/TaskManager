@@ -35,7 +35,7 @@ namespace TaskManager.Service
             try
             {
                 id = await _taskRepository.CreateTaskAsync(element);
-                _rabbitMQService.SendMessage("Created new registry on database");
+                _rabbitMQService.SendMessage($"Created task with id {id}\n");
             }
             catch (RabbitMQClientException ex)
             {
@@ -64,6 +64,7 @@ namespace TaskManager.Service
                     Status = (Proto.Status)Enum.Parse(typeof(Proto.Status), result.status)
                 };
 
+                _rabbitMQService.SendMessage($"Readed task with name {taskMessage.Name}\n");
             }
             catch (RabbitMQClientException ex)
             {
@@ -73,7 +74,6 @@ namespace TaskManager.Service
             {
                 _logger.LogError(ex, "Error updating database");
             }
-
             return taskMessage;
         }
 
@@ -91,6 +91,7 @@ namespace TaskManager.Service
                     finishTaskDate = DateTime.Now,
                 };
                 result = await _taskRepository.UpdateTaskAsync(taskElement);
+                _rabbitMQService.SendMessage($"Updated task with id {element.Id}\n");
             }
             catch (RabbitMQClientException ex)
             {
@@ -110,6 +111,7 @@ namespace TaskManager.Service
             try
             {
                 result = await _taskRepository.DeleteTaskAsync(id.Id);
+                _rabbitMQService.SendMessage($"Deleted task with id {id}\n");
             }
             catch (RabbitMQClientException ex)
             {
