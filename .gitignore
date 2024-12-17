@@ -364,6 +364,6 @@ FodyWeavers.xsd
 
 .vscode/
 
-*appsettings.json
+*/appsettings.json
 
 logs/

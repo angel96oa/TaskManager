@@ -27,7 +27,7 @@ namespace TaskManager.Messaging
             _logger = logger;
             _config = config.Value;
 
-            _filePath = "..\\..\\logs\\logs_"+DateTime.UtcNow.Day+"__"+DateTime.UtcNow.Month+"_"+ "_" + DateTime.UtcNow.Year +"_"+ DateTime.UtcNow.Hour + "_" + DateTime.UtcNow.Minute + "_" + DateTime.UtcNow.Second + ".txt";
+            _filePath = "..\\logs\\";
             var factory = new ConnectionFactory()
             {
                 HostName = _config.HostName,
@@ -155,7 +155,7 @@ namespace TaskManager.Messaging
                 }
 
                 // Escribir el mensaje en el archivo
-                using (StreamWriter writer = new StreamWriter(_filePath, append: true))
+                using (StreamWriter writer = new StreamWriter(_filePath+DateTime.UtcNow.Day + "__" + DateTime.UtcNow.Month + "_" + "_" + DateTime.UtcNow.Year+".txt", append: true))
                 {
                     writer.WriteLine($"{DateTime.Now}: {message}");
                 }
