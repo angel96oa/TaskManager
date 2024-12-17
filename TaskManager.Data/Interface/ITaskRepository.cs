@@ -7,7 +7,7 @@ namespace TaskManager.Data
         Task<int> CreateTaskAsync(TaskElement task);
         Task<TaskElement?> GetTaskByIdAsync(int id);
         Task<IEnumerable<TaskElement>> GetAllTasksAsync();
-        Task<TaskResponseEmpty?> UpdateTaskAsync(TaskElement task);
-        Task<TaskResponseEmpty?> DeleteTaskAsync(int id);
+        Task<TaskResponseEmpty> UpdateTaskAsync(TaskElement task);
+        Task<TaskResponseEmpty> DeleteTaskAsync(int id);
     }
 }

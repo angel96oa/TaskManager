@@ -90,6 +90,7 @@ namespace TaskManager.Service
                     status = element.Status.ToString(),
                     finishTaskDate = DateTime.Now,
                 };
+
                 result = await _taskRepository.UpdateTaskAsync(taskElement);
                 _rabbitMQService.SendMessage($"Updated task with id {element.Id}\n");
             }
