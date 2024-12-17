@@ -6,7 +6,7 @@ namespace TaskManager.API
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;

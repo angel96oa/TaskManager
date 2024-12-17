@@ -32,10 +32,20 @@ builder.Services.AddGrpcClient<TaskManagerGRPCService.TaskManagerGRPCServiceClie
     });
 });
 
-builder.Services.AddAuthorization(options =>
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.AddPolicy("AdminPolicy", policy =>
-        policy.RequireRole("Admin"));
+    options.LoginPath = PathString.Empty;
+    options.AccessDeniedPath = PathString.Empty;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        return Task.CompletedTask;
+    };
 });
 
 var app = builder.Build();
@@ -43,7 +53,9 @@ var app = builder.Build();
 app.UseRouting();
 
 app.UseMiddleware<BasicAuthMiddleware>();
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();

@@ -15,7 +15,6 @@ namespace TaskManager.API
         }
 
         public Task<int> CreateTask(string name, string description){
-            // Create a task
             try
             {
                 _logger.LogInformation("Task creation started with name: {Name}", name);

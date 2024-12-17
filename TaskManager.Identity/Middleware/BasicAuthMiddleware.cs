@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TaskManager.Identity
 {
@@ -45,18 +41,26 @@ namespace TaskManager.Identity
                 {
                     var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
 
-                    await authService.AuthenticateAsync(username, password);
+                    var isAuthenticated = await authService.AuthenticateAsync(username, password);
+                    if (!isAuthenticated)
+                    {
+                        throw new UnauthorizedAccessException("Invalid credentials.");
+                    }
 
                     var roles = await authService.GetRolesForUserAsync(username);
-                    _logger.LogInformation("User authenticated: {User}", username);
-
-                    var requiredRoles = context.GetEndpoint()?.Metadata.GetMetadata<ApplicationRole>()?.Name;
-                    if (requiredRoles != null && !roles.Any(role => requiredRoles.Contains(role)))
+                    if (!roles.Contains("Admin"))
                     {
                         throw new UnauthorizedAccessException("User does not have the required role.");
                     }
 
-                    _logger.LogInformation("User authorized with roles: {Roles}", string.Join(", ", roles));
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, username)
+                    };
+                    claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+                    var identity = new ClaimsIdentity(claims, "Basic");
+                    context.User = new ClaimsPrincipal(identity);
                 }
             
             }

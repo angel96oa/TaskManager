@@ -33,9 +33,16 @@ namespace TaskManager.Identity
                 UserName = username,
                 PasswordHash = password
             };
+            IdentityResult result;
+            try
+            {
+                result = await _userManager.CreateAsync(user, password);
+            }
+            catch (Exception ex)
+            {
+                throw new UnauthorizedAccessException("Invalid username or password");
 
-            var result = await _userManager.CreateAsync(user, password);
-
+            }
             return result;
         }
 
