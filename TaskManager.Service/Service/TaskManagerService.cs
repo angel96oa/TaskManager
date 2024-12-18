@@ -11,9 +11,9 @@ namespace TaskManager.Service
     {
         private readonly ILogger<TaskManagerService> _logger;
         private readonly ITaskRepository _taskRepository;
-        private readonly RabbitMQService _rabbitMQService;
+        private readonly IRabbitMQService _rabbitMQService;
 
-        public TaskManagerService(ILogger<TaskManagerService> logger, ITaskRepository taskRepository, RabbitMQService rabbitMQService)
+        public TaskManagerService(ILogger<TaskManagerService> logger, ITaskRepository taskRepository, IRabbitMQService rabbitMQService)
         {
             _logger = logger;
             _taskRepository = taskRepository;
@@ -40,10 +40,12 @@ namespace TaskManager.Service
             catch (RabbitMQClientException ex)
             {
                 _logger.LogError(ex, "Error sending message");
+                throw;
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error updating database");
+                throw;
             }
 
             _logger.LogInformation("Created task with id {Id}", id);
@@ -69,10 +71,12 @@ namespace TaskManager.Service
             catch (RabbitMQClientException ex)
             {
                 _logger.LogError(ex, "Error sending message");
+                throw;
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error updating database");
+                throw;
             }
             return taskMessage;
         }
@@ -97,10 +101,12 @@ namespace TaskManager.Service
             catch (RabbitMQClientException ex)
             {
                 _logger.LogError(ex, "Error sending message");
+                throw;
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error updating database");
+                throw;
             }
 
             return result;
@@ -117,10 +123,12 @@ namespace TaskManager.Service
             catch (RabbitMQClientException ex)
             {
                 _logger.LogError(ex, "Error sending message");
+                throw;
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error updating database");
+                throw;
             }
 
             return result;

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace TaskManager.Messaging
 {
-    public class RabbitMQService : IDisposable
+    public class RabbitMQService : IRabbitMQService, IDisposable
     {
         private readonly ILogger<RabbitMQService> _logger;
         private readonly IConnection _connection;
@@ -88,7 +88,7 @@ namespace TaskManager.Messaging
 
         }
 
-        private void ReceiveMessages(CancellationToken cancellationToken)
+        public void ReceiveMessages(CancellationToken cancellationToken)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace TaskManager.Messaging
             GC.SuppressFinalize(this);
         }
 
-        private void WriteMessageToFile(string message)
+        public void WriteMessageToFile(string message)
         {
             try
             {

@@ -18,7 +18,7 @@ builder.Services.AddLogging();
 builder.Services.Configure<RabbitMQConfiguration>(
     builder.Configuration.GetSection("RabbitMQ"));
 
-builder.Services.AddSingleton<RabbitMQService>();
+builder.Services.AddScoped<IRabbitMQService, RabbitMQService>();
 
 builder.Services.AddDbContext<TaskManagerDbContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:TaskManagerDatabase"]));
