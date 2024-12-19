@@ -9,9 +9,9 @@ namespace TaskManager.API
     public class TaskManagerController : ControllerBase
     {
         private readonly ILogger<TaskManagerController> _logger;
-        private readonly TaskManagerClient _taskManagerClient;
+        private readonly ITaskManagerClient _taskManagerClient;
 
-        public TaskManagerController(ILogger<TaskManagerController> logger, TaskManagerClient taskManagerClient)
+        public TaskManagerController(ILogger<TaskManagerController> logger, ITaskManagerClient taskManagerClient)
         {
             _logger = logger;
             _taskManagerClient = taskManagerClient;
@@ -75,13 +75,15 @@ namespace TaskManager.API
             {
                 _logger.LogInformation("UpdateTask operation received");
                 await _taskManagerClient.UpdateTask(id, element.Name, element.Description, element.Status);
-                return Ok();
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unexpected error occurred: {Message}", ex.Message);
                 return StatusCode(500, "Internal Server Error");
             }
+
+            return Ok();
         }
 
         [HttpDelete("DeleteTask")]
@@ -96,13 +98,15 @@ namespace TaskManager.API
             {
                 _logger.LogInformation("DeleteTask operation received");
                 await _taskManagerClient.DeleteTask(id);
-                return Ok();
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unexpected error occurred: {Message}", ex.Message);
                 return StatusCode(500, "Internal Server Error");
             }
+
+            return Ok();
         }
     }
 }

@@ -144,19 +144,3 @@ Compile the generated classes using the **Grpc.Tools** package.
 
 ---
 
-## Next Steps
-
-1. **Authentication and Authorization**:
-   - Implement security using JWT or gRPC Authentication.
-
-2. **Full Business Logic**
-  - Implement full business logic about the task manager
-
-3. **Testing**:
-   - Create unit and integration tests for each component.
-
-4. **Scalability**:
-   - Containerize the solution using Docker and orchestrate with Kubernetes.
-
----
-

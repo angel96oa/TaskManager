@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TaskManager.API\TaskManager.API.csproj" />
     <ProjectReference Include="..\..\TaskManager.Configuration\TaskManager.Configuration.csproj" />
     <ProjectReference Include="..\..\TaskManager.Data\TaskManager.Data.csproj" />
     <ProjectReference Include="..\..\TaskManager.Identity\TaskManager.Identity.csproj" />
