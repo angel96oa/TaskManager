@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  taskmanager-api:
+    build:
+      context: .
+      dockerfile: TaskManager.API/Dockerfile
+    ports:
+      - "5262:80"
+      - "7001:443"
+    depends_on:
+      - taskmanager-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - Server=host.docker.internal,1433;Database=TaskManager;User Id=dockerUser;Password=DockerPassword123@;
+    networks:
+      - taskmanager-network
+
+  taskmanager-service:
+    build:
+      context: .
+      dockerfile: TaskManager.Service/Dockerfile
+    ports:
+      - "5263:80"
+      - "7002:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - Server=host.docker.internal,1433;Database=TaskManager;User Id=dockerUser2;Password='DockerPassword123@'TrustServerCertificate=True;PersistSecurityInfo=true;
+    networks:
+      - taskmanager-network
+
+networks:
+  taskmanager-network:
+    driver: bridge

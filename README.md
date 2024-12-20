@@ -120,6 +120,12 @@ Compile the generated classes using the **Grpc.Tools** package.
 
 2. Access the API via gRPC using a client like **Postman** or gRPC-specific tools.
 
+## Execution with Docker Compose
+If you want to use containers, you need to install the latest version of Docker Desktop. Once installed, these are the steps to start the application on the repository folders:
+
+1. docker-compose build
+2. docker-compose up
+
 ---
 
 ## Workflow

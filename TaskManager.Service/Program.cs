@@ -62,11 +62,11 @@ app.MapGrpcService<TaskManagerService>();
 app.MapGet("/", () => "gRPC server is running");
 
 var rabbitService = app.Services.GetRequiredService<RabbitMQService>();
-rabbitService.StartListening(); // Inicia el servicio que escucha los mensajes
+rabbitService.StartListening(); 
 
 app.Run();
 
 app.Lifetime.ApplicationStopping.Register(() =>
 {
-    rabbitService.StopListening(); // Detener la escucha cuando la aplicación se está apagando
+    rabbitService.StopListening();
 });
